@@ -1,5 +1,10 @@
 import { useEffect, useRef } from "react";
+// eslint-disable-next-line
+// @ts-ignore
+import GamepadController from "gamepadcontroller";
 import type { NextPage } from "next";
+
+import { getAngle } from "../functions/calculateDirection";
 
 const Home: NextPage = () => {
   const center = useRef<HTMLDivElement>(null);
@@ -11,12 +16,38 @@ const Home: NextPage = () => {
     window.addEventListener("gamepaddisconnected", gamePadDisconnected);
 
     center.current.focus();
+    const gamepad = new GamepadController(0);
+    gamepad.onStickMove(0, moveJoystickEventHandler);
 
     return () => {
       window.removeEventListener("gamepadconnected", gamePadConnected);
       window.removeEventListener("gamepaddisconnected", gamePadDisconnected);
+      gamepad.removeOnStickMove(0);
     };
   }, [center]);
+
+  function moveJoystickEventHandler(state: any) {
+    const { current } = state;
+    getAngle(current);
+  }
+
+  function gamePadConnected(e: GamepadEvent) {
+    console.log(
+      "Gamepad connected at index %d: %s. %d buttons, %d axes.",
+      e.gamepad.index,
+      e.gamepad.id,
+      e.gamepad.buttons.length,
+      e.gamepad.axes.length
+    );
+  }
+
+  function gamePadDisconnected(e: GamepadEvent) {
+    console.log(
+      "Gamepad disconnected from index %d: %s",
+      e.gamepad.index,
+      e.gamepad.id
+    );
+  }
 
   return (
     <div className="grid h-screen w-screen shrink-0 grid-cols-7 grid-rows-6 bg-white">
@@ -37,26 +68,5 @@ const Home: NextPage = () => {
     </div>
   );
 };
-
-function gamePadConnected(e: GamepadEvent) {
-  console.log(
-    "Gamepad connected at index %d: %s. %d buttons, %d axes.",
-    e.gamepad.index,
-    e.gamepad.id,
-    e.gamepad.buttons.length,
-    e.gamepad.axes.length
-  );
-  console.log("full gamepad", e.gamepad);
-}
-
-function gamePadDisconnected(e: GamepadEvent) {
-  console.log(
-    "Gamepad disconnected from index %d: %s",
-    e.gamepad.index,
-    e.gamepad.id
-  );
-
-  console.log(e.gamepad);
-}
 
 export default Home;

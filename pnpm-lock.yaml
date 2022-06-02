@@ -16,6 +16,7 @@ specifiers:
   eslint-plugin-sort-destructure-keys: ^1.4.0
   eslint-plugin-unused-imports: ^2.0.0
   framer-motion: ^6.3.3
+  gamepadcontroller: ^1.0.1
   next: 12.1.6
   prettier: ^2.6.2
   prettier-plugin-tailwindcss: ^0.1.11
@@ -28,6 +29,7 @@ dependencies:
   '@heroicons/react': 1.0.6_react@18.1.0
   clsx: 1.1.1
   framer-motion: 6.3.6_react-dom@18.1.0+react@18.1.0
+  gamepadcontroller: 1.0.1
   next: 12.1.6_react-dom@18.1.0+react@18.1.0
   react: 18.1.0
   react-dom: 18.1.0_react@18.1.0
@@ -1267,6 +1269,10 @@ packages:
   /functions-have-names/1.2.3:
     resolution: {integrity: sha512-xckBUXyTIqT97tq2x2AMb+g163b5JFysYk0x4qxNFwbfQkmNZoiRHb6sPzI9/QV33WeuvVYBUIiD4NzNIyqaRQ==}
     dev: true
+
+  /gamepadcontroller/1.0.1:
+    resolution: {integrity: sha512-iqvK0x66kbZVkNBfpKONzNlSwdrOvrYzGmwoDwhWgSPz63cZuaPdFH5eCB1LbC5aW+GbGNLTGji+AyfMVVApgw==}
+    dev: false
 
   /get-caller-file/2.0.5:
     resolution: {integrity: sha512-DyFP3BM/3YHTQOCUL/w0OZHR0lpKeGrxotcHWcqNEdnltqFwXVfhEBQ94eIo34AfQpo0rGki4cyIiftY06h2Fg==}
