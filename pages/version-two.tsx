@@ -12,24 +12,7 @@ const timeDiffs: number[] = [];
 
 const Home: NextPage = () => {
   const virtualCursor = useRef<HTMLSpanElement>(null);
-
-  const buttonRefOne = useRef<HTMLButtonElement>(null);
-  const buttonRefTwo = useRef<HTMLButtonElement>(null);
-  const buttonRefThree = useRef<HTMLButtonElement>(null);
-  const buttonRefFour = useRef<HTMLButtonElement>(null); // Considered as center and starting point
-  const buttonRefFive = useRef<HTMLButtonElement>(null);
-  const buttonRefSix = useRef<HTMLButtonElement>(null);
-  const buttonRefSeven = useRef<HTMLButtonElement>(null);
-
-  const buttons = [
-    buttonRefOne,
-    buttonRefTwo,
-    buttonRefThree,
-    // buttonRefFour, // Should be removed in list of possible buttons
-    buttonRefFive,
-    buttonRefSix,
-    buttonRefSeven,
-  ];
+  const selectedElement = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     window.addEventListener("gamepadconnected", gamePadConnected);
@@ -48,23 +31,24 @@ const Home: NextPage = () => {
   function moveJoystickEventHandler(state: any) {
     const startTime = performance.now();
 
-    if (!buttonRefFour.current || !virtualCursor.current) return;
+    if (!selectedElement.current || !virtualCursor.current) return;
 
     const { current } = state;
     const angle = getAngle(current);
     const { height, width, x, y } =
-      buttonRefFour.current.getBoundingClientRect(); // Current selected element
+      selectedElement.current.getBoundingClientRect(); // Current selected element
 
     // Getting the center point of the current selected element
     const center = {
       x: x + width / 2,
       y: y + height / 2,
     };
+    const boundry = Math.max(window.innerWidth, window.innerHeight);
 
     let radius = 0;
     let found = false;
 
-    while (radius < window.innerHeight && !found) {
+    while (radius < boundry && !found) {
       // Get current pixel coordinates at given angle
       const x = center.x + radius * Math.sin((Math.PI * 2 * angle) / 360);
       const y =
@@ -93,20 +77,18 @@ const Home: NextPage = () => {
         break;
       }
 
-      for (let i = 0; i < buttons.length; i++) {
-        const elementRect = buttons[i].current?.getBoundingClientRect();
-        if (elementRect) {
-          if (
-            elementRect.x < x &&
-            x < elementRect.x + elementRect.width && // Is the x coordinate between the x range of the element
-            elementRect.y < y &&
-            y < elementRect.y + elementRect.height // Is the y coordinate between the y range of the element
-          ) {
-            console.log(buttons[i]);
-            buttons[i].current?.focus();
-            found = true;
-            break;
-          }
+      const nodes = document.elementsFromPoint(x, y);
+      for (const node of nodes) {
+        if (
+          node instanceof HTMLElement &&
+          node !== selectedElement.current &&
+          node.dataset.interest
+        ) {
+          console.log(node);
+          node.focus();
+          found = true;
+
+          break;
         }
       }
 
@@ -148,14 +130,14 @@ const Home: NextPage = () => {
         }}
       ></span>
       <div className="grid h-screen w-screen shrink-0 grid-cols-7 grid-rows-6 bg-white">
-        <button className="bg-blue-500" ref={buttonRefOne}></button>
+        <button className="bg-blue-500" data-interest></button>
         <button
           className="col-start-5 row-start-2 bg-orange-500"
-          ref={buttonRefTwo}
+          data-interest
         ></button>
         <button
           className="col-start-6 row-start-2 bg-green-500"
-          ref={buttonRefThree}
+          data-interest
         ></button>
         <button
           className="col-start-4 row-start-3 bg-purple-500"
@@ -163,21 +145,22 @@ const Home: NextPage = () => {
             const sum = timeDiffs.reduce((a, b) => a + b, 0);
             console.log(sum / timeDiffs.length);
           }}
-          ref={buttonRefFour}
+          ref={selectedElement}
+          data-interest
         >
-          1
+          2
         </button>
         <button
           className="col-start-2 row-start-5 bg-red-500"
-          ref={buttonRefFive}
+          data-interest
         ></button>
         <button
           className="col-start-5 row-start-5 bg-pink-500"
-          ref={buttonRefSix}
+          data-interest
         ></button>
         <button
           className="col-start-6 row-start-6 bg-teal-500"
-          ref={buttonRefSeven}
+          data-interest
         ></button>
       </div>
     </>
