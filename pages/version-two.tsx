@@ -15,15 +15,10 @@ const Home: NextPage = () => {
   const selectedElement = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    window.addEventListener("gamepadconnected", gamePadConnected);
-    window.addEventListener("gamepaddisconnected", gamePadDisconnected);
-
     const gamepad = new GamepadController(0);
     gamepad.onStickMove(0, moveJoystickEventHandler);
 
     return () => {
-      window.removeEventListener("gamepadconnected", gamePadConnected);
-      window.removeEventListener("gamepaddisconnected", gamePadDisconnected);
       gamepad.removeOnStickMove(0);
     };
   }, []);
@@ -96,28 +91,6 @@ const Home: NextPage = () => {
     }
 
     timeDiffs.push(performance.now() - startTime);
-  }
-
-  function gamePadConnected(e: GamepadEvent) {
-    if (!e.gamepad) return;
-
-    console.log(
-      "Gamepad connected at index %d: %s. %d buttons, %d axes.",
-      e.gamepad.index,
-      e.gamepad.id,
-      e.gamepad.buttons.length,
-      e.gamepad.axes.length
-    );
-  }
-
-  function gamePadDisconnected(e: GamepadEvent) {
-    if (!e.gamepad) return;
-
-    console.log(
-      "Gamepad disconnected from index %d: %s",
-      e.gamepad.index,
-      e.gamepad.id
-    );
   }
 
   return (
